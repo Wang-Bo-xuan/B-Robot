@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<robot name="B-Robot_model"
+	xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <link name="base_link">
+        <visual>
+                <geometry>
+                    <box size="1e-6 1e-6 1e-6"/>
+                </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                    <box size="1e-6 1e-6 1e-6"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1e-6"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+
+    <link name="base_ment_link">
+        <visual>
+                <geometry>
+                    <box size="0.085 0.12 0.14"/>
+                </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                    <box size="0.085 0.12 0.14"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+
+    <joint name="base_link_to_base_ment_link_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="base_ment_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <link name="left_to_right_link">
+        <visual>
+                <geometry>
+                    <cylinder length="0.16" radius="0.0025"/>
+                </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                    <cylinder length="0.16" radius="0.0025"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+
+    <joint name="left_to_right_link_to_base_ment_link_joint" type="continuous">
+        <parent link="base_ment_link"/>
+        <child link="left_to_right_link"/>
+        <origin xyz="0 0 -0.045" rpy="-1.57 0 0"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
+    <link name="left_wheel_link">
+        <visual>
+                <geometry>
+                    <cylinder length="0.01" radius="0.045"/>
+                </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                    <cylinder length="0.01" radius="0.045"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+
+    <joint name="left_wheel_link_to_base_ment_link_joint" type="continuous">
+        <parent link="left_to_right_link"/>
+        <child link="left_wheel_link"/>
+        <origin xyz="0 0 0.085" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
+    <link name="right_wheel_link">
+        <visual>
+                <geometry>
+                    <cylinder length="0.01" radius="0.045"/>
+                </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                    <cylinder length="0.01" radius="0.045"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+
+    <joint name="right_wheel_link_to_base_ment_link_joint" type="continuous">
+        <parent link="left_to_right_link"/>
+        <child link="right_wheel_link"/>
+        <origin xyz="0 0 -0.085" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
+    <link name="imu_link">
+        <visual>
+                <geometry>
+                    <box size="0.01 0.01 0.01" />
+                </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                    <box size="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </link>
+
+    <joint name="imu_link_left_wheel_link_joint" type="fixed">
+        <parent link="base_ment_link"/>
+        <child link="imu_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <!--gazebo>
+        <plugin name="differential_drive_controller"
+            filename="libgazebo_ros_diff_drive.so">
+            <leftJoint>left_wheel_link_to_base_ment_link_joint</leftJoint>
+            <rightJoint>right_wheel_link_to_base_ment_link_joint</rightJoint>
+            <robotBaseFrame>left_to_right_link</robotBaseFrame>
+            <wheelSeparation>0.17</wheelSeparation>
+            <wheelDiameter>0.045</wheelDiameter>
+            <publishWheelJointState>true</publishWheelJointState>
+            <legacyMode>false<legacyMode>
+            <commandTopic>/cmd_vel</commandTopic>
+            <odometryTopic>/odom</odometryTopic>
+        </plugin>
+    </gazebo-->
+
+    <!--gazebo>    
+        <plugin name="imu" filename="libgazebo_ros_imu.so">
+            <alwaysOn>true</alwaysOn>       
+            <bodyName>imu_link</bodyName>
+            <topicName>imu_data</topicName>
+            <serviceName>imu_service</serviceName>
+            <gaussianNoise>0.0</gaussianNoise>
+            <updateRate>20.0</updateRate> 
+        </plugin>
+    </gazebo-->
+</robot>
